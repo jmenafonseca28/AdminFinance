@@ -1,0 +1,13 @@
+---
+const { inputId, inputPlaceHolder, textLabel, typeInput = "text" } = Astro.props;
+---
+
+<div class="form-floating">
+  <input
+    type={typeInput}
+    class="form-control"
+    id={inputId}
+    placeholder={inputPlaceHolder}
+  />
+  <label for={inputId}>{textLabel}</label>
+</div>
