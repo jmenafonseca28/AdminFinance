@@ -1,18 +1,19 @@
 'use client'
-
 import { useEffect } from "react";
-import { isLogged } from "./scripts/Verifications";
+import { getUser } from "./services/AuthService";
 
 export default function Home() {
   useEffect(() => {
-    if (isLogged()) {
-      
-    } else {
-      window.location.href = '/pages/login';
-    }
+    redirect();
   }, []);
 
-  return (
-    <></>
-  );
+  async function redirect() {
+    if (await getUser()) {
+      window.location.href = "/pages/home";
+    } else {
+      window.location.href = "/pages/login";
+    }
+  }
+
+  return (<></>);
 }

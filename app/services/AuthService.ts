@@ -3,7 +3,6 @@ import { supabase } from './SupabaseClientService';
 import { verifyFields } from '../scripts/Verifications';
 
 async function login(user: UserLogin) {
-    console.log("login", user);
 
     if (!user || !verifyFields(user.email, user.password)) {
         console.error("Campos incorrectos");
@@ -21,6 +20,27 @@ async function login(user: UserLogin) {
     return response;
 }
 
-function logout() { }
+async function logout() {
 
-export { login, logout };
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        console.error("Error", Error);
+        return;
+    }
+
+}
+
+async function getUser() {
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+        console.log("Usuario", user);
+        return user;
+    }
+
+    return null;
+}
+
+export { login, logout, getUser };
