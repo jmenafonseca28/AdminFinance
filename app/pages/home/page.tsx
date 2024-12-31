@@ -10,6 +10,8 @@ import { getBalanceForLoggedUser } from '@/app/services/UserProfilesService';
 import { TypeMovements } from '@/app/constants/TypeMovements.types';
 import { parseDate } from '@/app/scripts/DateParser';
 import Navbar from '@/app/components/Navbar';
+import CustomModal from '@/app/components/CustomModal';
+import { Modal } from 'bootstrap';
 
 const DashboardPage = () => {
     const [isMounted, setIsMounted] = useState(false);
@@ -80,15 +82,18 @@ const DashboardPage = () => {
         }
     }
 
+    function showAddModal() {
+        const modal = Modal.getInstance(document.getElementById('addModal') as HTMLElement);
+        modal?.show();
+    }
+
 
     return (
         <div className="container-fluid">
 
             <Navbar />
 
-            {/* Main Content */}
             <div className="container">
-                {/* Quick Stats */}
                 <div className="row mb-4">
                     <div className="col-md-4 mb-3 mb-md-0">
                         <div className="card">
@@ -133,7 +138,6 @@ const DashboardPage = () => {
                     </div>
                 </div>
 
-                {/* Chart */}
                 <div className="card mb-4">
                     <div className="card-header">
                         <h5 className="card-title mb-0">Resumen Financiero</h5>
@@ -170,10 +174,10 @@ const DashboardPage = () => {
                     </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="row">
                     <div className="col-md-6">
-                        <button className="btn btn-success w-100 mb-3 d-flex align-items-center justify-content-center gap-2">
+                        <button className="btn btn-success w-100 mb-3 d-flex align-items-center justify-content-center gap-2"
+                            data-bs-toggle="modal" data-bs-target={`#${"addModal"}`} onClick={showAddModal}>
                             <PlusCircle />
                             Registrar Ingreso
                         </button>
@@ -186,22 +190,15 @@ const DashboardPage = () => {
                     </div>
                 </div>
             </div>
+            <CustomModal title='Agregar ingreso' idModal='addModal' textPrimaryButton='agregar' textSecondaryButton='cancelar'
+                body={<>
+                    <form>
+                        
+                    </form>
+                    <input type="number" className="form-control mb-3" placeholder="0" min={0} max={100000000} />
+                </>} />
         </div>
     );
 };
 
 export default DashboardPage;
-/* async function redirect() {
-    if (!await getUser()) {
-        window.location.href = "/pages/login";
-    } else {
-    }
-}
-
-async function logoutF() {
-    await logout().then(() => {
-        window.location.href = "/pages/login";
-    }).catch((error) => {
-        console.error(error);
-    });
-} */

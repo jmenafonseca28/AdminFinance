@@ -10,7 +10,6 @@ async function login(user: UserLogin) {
     }
 
     const response = await supabase.auth.signInWithPassword(user).then((response) => {
-        console.log("Éxito", response);
         return response;
     }).catch((error) => {
         console.error("Error", error);
@@ -31,16 +30,4 @@ async function logout() {
 
 }
 
-async function getUser() {
-
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (user) {
-        console.log("Usuario", user);
-        return user;
-    }
-
-    return null;
-}
-
-export { login, logout, getUser };
+export { login, logout };

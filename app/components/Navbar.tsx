@@ -1,6 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getLoggedUserName, logout } from '../services/UserProfilesService';
 
 export default function Navbar() {
+    const [userName, setUserName] = useState("");
+    const router = useRouter();
+
+    useEffect(() => {
+        getUser();
+    }, []);
+
+    async function getUser() {
+        const name = await getLoggedUserName();
+
+        if (name) {
+            setUserName(name);
+        }
+    }
+
+    async function logoutF() {
+        const error = await logout();
+
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        router.push('/pages/login');
+    }
+
     return (
         <>
             {/* Navbar */}
@@ -10,11 +38,11 @@ export default function Navbar() {
                     <ul className="navbar-nav">
                         <li className="nav-item dropdown">
                             <button className="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                Nombre de usuario
+                                {userName}
                             </button>
                             <ul className="dropdown-menu dropdown-menu-dark">
                                 <li><button className="dropdown-item">Perfil</button></li>
-                                <li><button className="dropdown-item">Cerrar sesión</button></li>
+                                <li><button className="dropdown-item" onClick={logoutF}>Cerrar sesión</button></li>
                             </ul>
                         </li>
                     </ul>

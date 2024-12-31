@@ -1,5 +1,5 @@
 'use client'
-
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import InputLabel from '../../components/InputLabel'
 import UserLogin from '@/app/models/UserLogin.model'
@@ -8,6 +8,7 @@ import { login } from '@/app/services/AuthService'
 export default function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -19,7 +20,7 @@ export default function Login() {
         try {
             const response = await login(user)
             if (response) {
-                window.location.href = "/pages/home"
+                router.push('/pages/home')
             }
         } catch (error) {
             console.error(error)
