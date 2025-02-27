@@ -1,31 +1,34 @@
-'use client'
+'use client';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
-import InputLabel from '../../components/InputLabel'
-import UserLogin from '@/app/models/UserLogin.model'
-import { login } from '@/app/services/AuthService'
+import React, { useState } from 'react';
+import InputLabel from '../../components/InputLabel';
+import UserLogin from '@/app/models/UserLogin.model';
+import { login } from '@/app/services/AuthService';
 
 export default function Login() {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+        e.preventDefault();
         const user: UserLogin = {
             email,
             password
-        }
+        };
 
         try {
-            const response = await login(user)
+            const response = await login(user);
             if (response) {
-                router.push('/pages/home')
+                console.log('Inicio de sesión exitoso');
+                router.push('/pages/home');
+            } else {
+                console.error('Error al iniciar sesión');
             }
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
-    }
+    };
 
     return (
         <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
@@ -59,6 +62,6 @@ export default function Login() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 

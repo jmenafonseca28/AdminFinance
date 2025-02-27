@@ -1,33 +1,32 @@
-import type UserLogin from '../models/UserLogin.model';
-import { supabase } from './SupabaseClientService';
-import { verifyFields } from '../scripts/Verifications';
+//import { supabase } from './SupabaseClientService';
+//import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { supabase } from './ClientServiceSupabase';
+import UserLogin from '@/app/models/UserLogin.model';
 
-async function login(user: UserLogin) {
-
-    if (!user || !verifyFields(user.email, user.password)) {
-        console.error("Campos incorrectos");
-        return;
+export async function login(user: UserLogin) {
+    const { email, password } = user;
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    console.log("Info ", data, error);
+    if (error) {
+        console.error('Error al iniciar sesión:', error.message);
+        return null;
     }
 
-    const response = await supabase.auth.signInWithPassword(user).then((response) => {
-        return response;
-    }).catch((error) => {
-        console.error("Error", error);
-        return error;
-    });
+    if (data.session) {
+        await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+        });
+    }
 
-    return response;
+    return data;
 }
 
-async function logout() {
-
+export async function logout() {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-        console.error("Error", Error);
+        console.error("Error", error.message);
         return;
     }
-
 }
-
-export { login, logout };

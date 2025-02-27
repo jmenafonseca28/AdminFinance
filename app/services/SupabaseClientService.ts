@@ -1,7 +1,7 @@
 /* import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY  ?? "";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 if (!supabaseUrl || !supabaseKey) {
   console.error("Supabase URL o Key no están configurados correctamente.");
@@ -10,18 +10,22 @@ if (!supabaseUrl || !supabaseKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
-    persistSession: true
+    persistSession: false, 
+    storage: {
+      getItem: (key) => {
+        const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
+          const [name, value] = cookie.split('=');
+          acc[name] = value;
+          return acc;
+        }, {} as Record<string, string>);
+        return cookies[key] || null;
+      },
+      setItem: (key, value) => {
+        document.cookie = `${key}=${value}; path=/;`;
+      },
+      removeItem: (key) => {
+        document.cookie = `${key}=; Max-Age=0; path=/;`;
+      }
+    }
   }
 }); */
-
-
-import { createBrowserClient } from '@supabase/ssr'
-
-function createClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-}
-
-export const supabase = createClient();

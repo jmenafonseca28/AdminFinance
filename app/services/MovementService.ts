@@ -1,4 +1,4 @@
-import { supabase } from "./SupabaseClientService";
+import { supabase } from "./ClientServiceSupabase";
 
 async function getMovementsForLoggedUser() {
     const id = await supabase.auth.getUser().then((response) => {
