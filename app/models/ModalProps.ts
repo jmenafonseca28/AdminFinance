@@ -3,7 +3,7 @@ export default interface ModalProps {
     body: React.ReactNode,
     textPrimaryButton: string,
     idModal: string,
-    onClickPrimaryButton?: () => void,
+    onClickPrimaryButton?: () => undefined,
     textSecondaryButton?: string,
-    onClickSecondaryButton?: () => void,
+    onClickSecondaryButton?: () => undefined
 }

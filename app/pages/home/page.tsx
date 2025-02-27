@@ -11,7 +11,8 @@ import { TypeMovements } from '@/app/constants/TypeMovements.types';
 import { parseDate } from '@/app/scripts/DateParser';
 import Navbar from '@/app/components/Navbar';
 import CustomModal from '@/app/components/CustomModal';
-import { Modal } from 'bootstrap';
+//import dynamic from 'next/dynamic';
+//const { Modal } = dynamic(() => import('bootstrap'), { ssr: false });
 
 const DashboardPage = () => {
     const [isMounted, setIsMounted] = useState(false);
@@ -83,8 +84,24 @@ const DashboardPage = () => {
     }
 
     function showAddModal() {
-        const modal = Modal.getInstance(document.getElementById('addModal') as HTMLElement);
-        modal?.show();
+        //const modal = Modal.getInstance(document.getElementById('addModal') as HTMLElement);
+        //modal?.show();
+        /* if (typeof window !== 'undefined') {
+            import('bootstrap').then((bootstrap) => {
+                const modalElement = document.getElementById('addModal');
+                if (modalElement) {
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                }
+            });
+        } */
+        if (typeof window !== "undefined" && window.bootstrap) {
+            const modalElement = document.getElementById("addModal");
+            if (modalElement) {
+                const modal = new window.bootstrap.Modal(modalElement);
+                modal.show();
+            }
+        }
     }
 
 
@@ -190,12 +207,12 @@ const DashboardPage = () => {
                     </div>
                 </div>
             </div>
-            <CustomModal title='Agregar ingreso' idModal='addModal' textPrimaryButton='agregar' textSecondaryButton='cancelar'
+            <CustomModal title='Agregar ingreso' idModal='addModal' textPrimaryButton='Agregar'
+                textSecondaryButton='Cancelar'
                 body={<>
                     <form>
-                        
+                        <input type="number" className="form-control mb-3" placeholder="0" min={0} max={100000000} />
                     </form>
-                    <input type="number" className="form-control mb-3" placeholder="0" min={0} max={100000000} />
                 </>} />
         </div>
     );

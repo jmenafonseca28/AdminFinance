@@ -1,9 +1,9 @@
 //import { updateSession } from '@/utils/supabase/middleware';
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { type NextRequest, NextResponse } from 'next/server';
+import { Routes } from "./app/constants/Routes";
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
-  console.log('Middleware executed', request);
   //const supabaseResponse = await updateSession(request);
 
   const response = NextResponse.next();
@@ -11,16 +11,16 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   await supabase.auth.getSession();
   const { data: { user } } = await supabase.auth.getUser();
-  
+
   const { pathname } = request.nextUrl;
-  const protectedRoutes: string[] = ['/pages/home', '/pages/profile'];
+  const protectedRoutes: string[] = [Routes.HOME, Routes.PROFILE];
 
   if (protectedRoutes.includes(pathname) && !user) {
-    return NextResponse.redirect(new URL('/pages/login', request.url));
+    return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
   }
 
-  if (user && pathname === '/pages/login') {
-    return NextResponse.redirect(new URL('/pages/home', request.url));
+  if (user && (pathname === Routes.LOGIN || pathname === '/')) {
+    return NextResponse.redirect(new URL(Routes.HOME, request.url));
   }
 
   return response;
