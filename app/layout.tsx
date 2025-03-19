@@ -1,6 +1,6 @@
-import BootstrapClient from "./components/BootstrapClient";
+//import BootstrapClient from "./components/BootstrapClient";
 import "./globals.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function RootLayout({
   children,
@@ -16,7 +16,7 @@ export default function RootLayout({
       </head>
       <body >
         {children}
-        <BootstrapClient />
+        
       </body>
     </html>
   );

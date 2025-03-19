@@ -131,7 +131,7 @@ const DashboardPage = () => {
                             <div className="card-body">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <p className="text-muted mb-1">Ingresos del Mes</p>
+                                        <p className="text-muted mb-1 m-96">Ingresos del Mes</p>
                                         <h2 className="h4 mb-0 text-success">+₡{monthEntrance}</h2>
                                     </div>
                                     <ArrowUpRight size={32} className="text-success" />
