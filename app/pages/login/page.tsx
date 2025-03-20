@@ -20,7 +20,6 @@ export default function Login() {
         try {
             const response = await login(user);
             if (response) {
-                console.log('Inicio de sesión exitoso');
                 router.push('/pages/home');
             } else {
                 console.error('Error al iniciar sesión');
