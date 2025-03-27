@@ -16,15 +16,17 @@ export default function InputLabel({
     onchange,
 }: InputLabelProps) {
     return (
-        <div className="form-floating mb-3">
+        <div className="mb-4">
+            <label htmlFor={inputId} className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
+                {textLabel}
+            </label>
             <input
                 type={typeInput}
-                className="form-control"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 id={inputId}
                 placeholder={inputPlaceHolder}
                 onChange={onchange}
             />
-            <label htmlFor={inputId}>{textLabel}</label>
         </div>
     )
 }
