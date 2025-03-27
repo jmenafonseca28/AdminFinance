@@ -30,10 +30,10 @@ export default function Login() {
     };
 
     return (
-        <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
-            <div className="card shadow-lg" style={{ maxWidth: '400px' }}>
-                <div className="card-body p-4 p-md-5">
-                    <h1 className="card-title text-center mb-4 fw-bold">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+            <div className="bg-white dark:bg-gray-600 shadow-lg rounded-lg max-w-sm w-full">
+                <div className="p-6 text-black dark:text-white">
+                    <h1 className="text-2xl font-bold text-center mb-6">
                         Bienvenido
                     </h1>
                     <form onSubmit={handleSubmit}>
@@ -53,7 +53,7 @@ export default function Login() {
                         />
                         <button
                             type="submit"
-                            className="btn btn-primary w-100 py-2"
+                            className="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600 transition"
                         >
                             Entrar
                         </button>
