@@ -1,1 +1,0 @@
-Arreglar funcionalidad principal para agregar gastos y ganancias

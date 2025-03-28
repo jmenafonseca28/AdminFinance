@@ -1,6 +1,8 @@
 /* "use client";
 import { useEffect } from "react";
 
+// Hola, estoy practicando usar comando de git ocupo hacer un cambio tons aqui esta xd
+
 export default function BootstrapClient() {
   useEffect(() => {
     // eslint-disable-next-line 
