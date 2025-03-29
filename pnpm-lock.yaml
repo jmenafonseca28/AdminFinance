@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@midudev/tailwind-animations':
+        specifier: ^0.2.0
+        version: 0.2.0(tailwindcss@4.0.10)
       '@popperjs/core':
         specifier: 2.11.8
         version: 2.11.8
@@ -30,10 +33,10 @@ importers:
         specifier: 0.469.0
         version: 0.469.0(react@19.0.0)
       next:
-        specifier: ^15.2.4
+        specifier: 15.2.4
         version: 15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       postcss:
-        specifier: ^8.5.3
+        specifier: 8.5.3
         version: 8.5.3
       react:
         specifier: 19.0.0
@@ -251,6 +254,11 @@ packages:
   '@mapbox/node-pre-gyp@1.0.11':
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
     hasBin: true
+
+  '@midudev/tailwind-animations@0.2.0':
+    resolution: {integrity: sha512-4mktb060dA7SZz0LjMfhBT30HWPmQENwF4AJC7/etESWohe4pukST0ohC2yAePS5GNinhY3MXmZZ8//2ywafOQ==}
+    peerDependencies:
+      tailwindcss: ^3.0.0 || ^4.0.0
 
   '@next/env@15.2.4':
     resolution: {integrity: sha512-+SFtMgoiYP3WoSswuNmxJOCwi06TdWE733D+WPjpXIe4LXGULwEaofiiAy6kbS0+XjM5xF5n3lKuBwN2SnqD9g==}
@@ -2159,6 +2167,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@midudev/tailwind-animations@0.2.0(tailwindcss@4.0.10)':
+    dependencies:
+      tailwindcss: 4.0.10
 
   '@next/env@15.2.4': {}
 
