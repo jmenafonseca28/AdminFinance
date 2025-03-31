@@ -3,23 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@midudev/tailwind-animations": "0.2.0",
     "@popperjs/core": "2.11.8",
-    "@supabase/ssr": "0.5.2",
-    "@supabase/supabase-js": "2.47.10",
+    "@supabase/ssr": "0.6.1",
+    "@supabase/supabase-js": "2.49.4",
     "@tailwindcss/postcss": "4.0.10",
     "bcrypt": "5.1.1",
     "bootstrap": "5.3.3",
     "lucide-react": "0.469.0",
-    "next": "15.1.2",
-    "postcss": "^8.5.3",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "next": "15.2.4",
+    "postcss": "8.5.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hot-toast": "2.5.2",
     "recharts": "2.15.0",
     "tailwindcss": "4.0.10"
   },
@@ -28,11 +30,11 @@
     "@types/bcrypt": "5.0.2",
     "@types/bootstrap": "5.2.10",
     "@types/node": "20",
-    "@types/react": "19",
-    "@types/react-dom": "19",
+    "@types/react": "19.0.12",
+    "@types/react-dom": "19.0.4",
     "eslint": "9",
     "eslint-config-next": "15.1.2",
     "typescript": "5"
   },
-  "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
+  "packageManager": "pnpm@10.7.0+sha512.6b865ad4b62a1d9842b61d674a393903b871d9244954f652b8842c2b553c72176b278f64c463e52d40fff8aba385c235c8c9ecf5cc7de4fd78b8bb6d49633ab6"
 }
