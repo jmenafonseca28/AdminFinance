@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import ModalProps from '../models/ModalProps'
+import ModalProps from '../models/ComponentProps/ModalProps'
 
 export default function Modal(props: ModalProps) {
 

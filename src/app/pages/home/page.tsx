@@ -11,8 +11,7 @@ import { TypeMovements } from '@/app/constants/TypeMovements.types';
 import { parseDate } from '@/app/scripts/DateParser';
 import Navbar from '@/app/components/Navbar';
 import CustomModal from '@/app/components/CustomModal';
-//import dynamic from 'next/dynamic';
-//const { Modal } = dynamic(() => import('bootstrap'), { ssr: false });
+
 
 const DashboardPage = () => {
     const [isMounted, setIsMounted] = useState(false);
@@ -84,24 +83,7 @@ const DashboardPage = () => {
     }
 
     function showAddModal() {
-        //const modal = Modal.getInstance(document.getElementById('addModal') as HTMLElement);
-        //modal?.show();
-        /* if (typeof window !== 'undefined') {
-            import('bootstrap').then((bootstrap) => {
-                const modalElement = document.getElementById('addModal');
-                if (modalElement) {
-                    const modal = new bootstrap.Modal(modalElement);
-                    modal.show();
-                }
-            });
-        } */
-        if (typeof window !== "undefined" && window.bootstrap) {
-            const modalElement = document.getElementById("addModal");
-            if (modalElement) {
-                const modal = new window.bootstrap.Modal(modalElement);
-                modal.show();
-            }
-        }
+        // TODO: Implementar el modal de agregar ingreso
     }
 
 
