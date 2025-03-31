@@ -21,7 +21,6 @@
     ],
     "paths": {
       "@/*": ["./src/*", "./src/app/*"],
-      "@/utils/*": ["utils/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "utils/supabase/middleware.ts", "src/app/**/*"],
