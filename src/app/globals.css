@@ -1,3 +1,25 @@
-/* @import 'bootstrap/dist/css/bootstrap.min.css?sourceMap=false';  */
 @import "tailwindcss";
- 
+
+@plugin "@midudev/tailwind-animations";
+
+@theme {}
+
+@utility animate-bounce-50 {
+    animation: bounce 1s infinite;
+    animation-delay: 0.2s;
+}
+
+@utility animate-bounce-100 {
+    animation: bounce 1s infinite;
+    animation-delay: 0.3s;
+}
+
+@utility animate-bounce-200 {
+    animation: bounce 1s infinite;
+    animation-delay: 0.4s;
+}
+
+@utility animate-bounce-300 {
+    animation: bounce 1s infinite;
+    animation-delay: 0.5s;
+}
