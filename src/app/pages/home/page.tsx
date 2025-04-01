@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PlusCircle, MinusCircle, Wallet, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import MonthReport from '@/app/models/MonthReport.model';
@@ -12,13 +12,14 @@ import { parseDate } from '@/app/scripts/DateParser';
 import Navbar from '@/app/components/Navbar';
 import CustomModal from '@/app/components/CustomModal';
 
-
 const DashboardPage = () => {
     const [isMounted, setIsMounted] = useState(false);
     const [data, setData] = useState<MonthReport[]>([]);
     const [totalBalance, setTotalBalance] = useState(0);
     const [monthEntrance, setMonthEntrance] = useState(0);
     const [monthBill, setMonthBill] = useState(0);
+
+    const addModalRef = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
         setIsMounted(true);
@@ -38,7 +39,6 @@ const DashboardPage = () => {
     }
 
     async function createData(): Promise<MonthReport[]> {
-
         const movements = await getMovementsForLoggedUser() as Movements[] | undefined;
         if (!movements || 'code' in movements) {
             return [];
@@ -82,120 +82,120 @@ const DashboardPage = () => {
         }
     }
 
-    function showAddModal() {
-        // TODO: Implementar el modal de agregar ingreso
+    function showAddModal(typeMovement: string) {
+        addModalRef.current?.showModal();
     }
 
-
     return (
-        <div className="container-fluid">
-
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white">
             <Navbar />
-
-            <div className="container">
-                <div className="row mb-4">
-                    <div className="col-md-4 mb-3 mb-md-0">
-                        <div className="card">
-                            <div className="card-body">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <p className="text-muted mb-1">Balance Total</p>
-                                        <h2 className="h4 mb-0">₡{totalBalance}</h2>
-                                    </div>
-                                    <Wallet size={32} className="text-primary" />
-                                </div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {/* Cards de resumen */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    {/* Balance Total */}
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <p className="text-sm text-gray-500 mb-1">Balance Total</p>
+                                <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">₡{totalBalance}</h2>
                             </div>
+                            <Wallet size={32} className="text-blue-600" />
                         </div>
                     </div>
 
-                    <div className="col-md-4 mb-3 mb-md-0">
-                        <div className="card">
-                            <div className="card-body">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <p className="text-muted mb-1 m-96">Ingresos del Mes</p>
-                                        <h2 className="h4 mb-0 text-success">+₡{monthEntrance}</h2>
-                                    </div>
-                                    <ArrowUpRight size={32} className="text-success" />
-                                </div>
+                    {/* Ingresos del Mes */}
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <p className="text-sm text-gray-500 mb-1">Ingresos del Mes</p>
+                                <h2 className="text-2xl font-semibold text-green-600">+₡{monthEntrance}</h2>
                             </div>
+                            <ArrowUpRight size={32} className="text-green-600" />
                         </div>
                     </div>
 
-                    <div className="col-md-4">
-                        <div className="card">
-                            <div className="card-body">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <p className="text-muted mb-1">Gastos del Mes</p>
-                                        <h2 className="h4 mb-0 text-danger">-₡{monthBill}</h2>
-                                    </div>
-                                    <ArrowDownRight size={32} className="text-danger" />
-                                </div>
+                    {/* Gastos del Mes */}
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <p className="text-sm text-gray-500 mb-1">Gastos del Mes</p>
+                                <h2 className="text-2xl font-semibold text-red-600">-₡{monthBill}</h2>
                             </div>
+                            <ArrowDownRight size={32} className="text-red-600" />
                         </div>
                     </div>
                 </div>
 
-                <div className="card mb-4">
-                    <div className="card-header">
-                        <h5 className="card-title mb-0">Resumen Financiero</h5>
-                    </div>
-                    <div className="card-body">
-                        <div style={{ width: '100%', height: '400px' }}>
-                            {isMounted && (
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart
-                                        data={data}
-                                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                                    >
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="month" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="Ingresos"
-                                            stroke="#198754"
-                                            strokeWidth={2}
-                                        />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="Gastos"
-                                            stroke="#dc3545"
-                                            strokeWidth={2}
-                                        />
-                                    </LineChart>
-                                </ResponsiveContainer>
-                            )}
-                        </div>
+                {/* Gráfico */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+                    <h5 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Resumen Financiero</h5>
+                    <div className="h-[400px]">
+                        {isMounted && (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart
+                                    data={data}
+                                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="month" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Line type="monotone" dataKey="Ingresos" stroke="#198754" strokeWidth={2} />
+                                    <Line type="monotone" dataKey="Gastos" stroke="#dc3545" strokeWidth={2} />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        )}
                     </div>
                 </div>
 
-                <div className="row">
-                    <div className="col-md-6">
-                        <button className="btn btn-success w-100 mb-3 d-flex align-items-center justify-content-center gap-2"
-                            data-bs-toggle="modal" data-bs-target={`#${"addModal"}`} onClick={showAddModal}>
-                            <PlusCircle />
-                            Registrar Ingreso
-                        </button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-danger w-100 mb-3 d-flex align-items-center justify-content-center gap-2">
-                            <MinusCircle />
-                            Registrar Gasto
-                        </button>
-                    </div>
+                {/* Botones de acción */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button
+                        className="flex items-center justify-center gap-2 w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors"
+                        onClick={() => showAddModal(TypeMovements.ENTRANCE)}
+                    >
+                        <PlusCircle size={20} />
+                        Registrar Ingreso
+                    </button>
+                    <button
+                        className="flex items-center justify-center gap-2 w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                        <MinusCircle size={20} />
+                        Registrar Gasto
+                    </button>
                 </div>
             </div>
-            <CustomModal title='Agregar ingreso' idModal='addModal' textPrimaryButton='Agregar'
+
+            <CustomModal
+                title='Agregar ingreso'
+                idModal='addModal'
+                textPrimaryButton='Agregar'
                 textSecondaryButton='Cancelar'
-                body={<>
+                ref={addModalRef}
+                body={
                     <form>
-                        <input type="number" className="form-control mb-3" placeholder="0" min={0} max={100000000} />
+                        <input
+                            type="number"
+                            className="w-full px-4 py-2 border text-black dark:text-white border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="0"
+                            min={0}
+                            max={100000000}
+                        />
                     </form>
-                </>} />
+                }
+            />
+            <CustomModal
+                title='Agregar gasto'
+                idModal='addModal'
+                textPrimaryButton='Agregar'
+                textSecondaryButton='Cancelar'
+                body={
+                    <form>
+                        <input type="number" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0" min={0} max={100000000} />
+                    </form>
+                }
+            />
         </div>
     );
 };

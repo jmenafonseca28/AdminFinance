@@ -1,12 +1,5 @@
-import React, { ChangeEvent } from 'react'
-
-interface InputLabelProps {
-    inputId: string;
-    inputPlaceHolder: string;
-    textLabel: string;
-    typeInput?: string;
-    onchange?: (event: ChangeEvent<HTMLInputElement>) => void;
-}
+import React from 'react'
+import { InputLabelProps } from '../models/ComponentProps/InputLabelProps'
 
 export default function InputLabel({
     inputId,
