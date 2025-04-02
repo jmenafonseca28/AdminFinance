@@ -185,6 +185,7 @@ const DashboardPage = () => {
                     </form>
                 }
             />
+
             <CustomModal
                 title='Agregar gasto'
                 idModal='addModal'

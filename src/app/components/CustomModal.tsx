@@ -2,10 +2,13 @@ import React, { useEffect, useRef } from 'react'
 import ModalProps from '../models/ComponentProps/ModalProps'
 import { X } from 'lucide-react'
 
-export default function Modal(props: ModalProps) {
-    const dialogRef = props.ref ?? useRef<HTMLDialogElement>(null);
+    // TODO: Animar el modal: 
+    // Abrirse: ✅ 
+    // Cerrarse: ❌
 
-    // TODO: Animar el modal
+export default function Modal(props: ModalProps) {
+
+    const dialogRef = props.ref ?? useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
         const dialog = dialogRef.current;
@@ -31,11 +34,11 @@ export default function Modal(props: ModalProps) {
         <dialog
             ref={dialogRef}
             id={props.idModal}
-            className="backdrop:bg-black/50 backdrop:backdrop-blur-sm rounded-lg p-0 shadow-xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96"
+            className="border-0 outline-none backdrop:bg-black/50 backdrop:backdrop-blur-sm p-0 shadow-xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-95 animate-fade-in rounded-lg bg-gray-800"
         >
             <div className="w-full max-w-md">
-                <div className="bg-white dark:bg-gray-800 rounded-lg">
-                    <div className="flex items-center justify-between p-4 border-b">
+                <div className="bg-white dark:bg-gray-800">
+                    <div className="flex items-center justify-between p-6">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-white">{props.title}</h2>
                         <button
                             onClick={() => dialogRef.current?.close()}
@@ -46,11 +49,11 @@ export default function Modal(props: ModalProps) {
                     <div className="p-4">
                         {props.body}
                     </div>
-                    <div className="flex justify-end gap-2 p-4 border-t">
+                    <div className="flex justify-end gap-2 p-4 ">
                         {props.textSecondaryButton && (
                             <button
                                 onClick={() => dialogRef.current?.close()}
-                                className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                className="border dark:border-0 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                             >
                                 {props.textSecondaryButton}
                             </button>
@@ -65,5 +68,6 @@ export default function Modal(props: ModalProps) {
                 </div>
             </div>
         </dialog>
+
     )
 }
