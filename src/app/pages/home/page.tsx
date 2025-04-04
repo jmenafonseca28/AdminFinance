@@ -11,15 +11,19 @@ import { TypeMovements } from '@/app/constants/TypeMovements.types';
 import { parseDate } from '@/app/scripts/DateParser';
 import Navbar from '@/app/components/Navbar';
 import CustomModal from '@/app/components/CustomModal';
+import InputLabel from '@/app/components/InputLabel';
 
 const DashboardPage = () => {
+    // State variables
     const [isMounted, setIsMounted] = useState(false);
     const [data, setData] = useState<MonthReport[]>([]);
     const [totalBalance, setTotalBalance] = useState(0);
     const [monthEntrance, setMonthEntrance] = useState(0);
     const [monthBill, setMonthBill] = useState(0);
 
+    // Refs
     const addModalRef = useRef<HTMLDialogElement>(null);
+    const substractModalRef = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
         setIsMounted(true);
@@ -80,10 +84,6 @@ const DashboardPage = () => {
             setMonthEntrance(monthNowData.Ingresos);
             setMonthBill(monthNowData.Gastos);
         }
-    }
-
-    function showAddModal(typeMovement: string) {
-        addModalRef.current?.showModal();
     }
 
     return (
@@ -153,13 +153,14 @@ const DashboardPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button
                         className="flex items-center justify-center gap-2 w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors"
-                        onClick={() => showAddModal(TypeMovements.ENTRANCE)}
+                        onClick={() => { addModalRef.current?.showModal() }}
                     >
                         <PlusCircle size={20} />
                         Registrar Ingreso
                     </button>
                     <button
                         className="flex items-center justify-center gap-2 w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors"
+                        onClick={() => { substractModalRef.current?.showModal() }}
                     >
                         <MinusCircle size={20} />
                         Registrar Gasto
@@ -174,27 +175,18 @@ const DashboardPage = () => {
                 textSecondaryButton='Cancelar'
                 ref={addModalRef}
                 body={
-                    <form>
-                        <input
-                            type="number"
-                            className="w-full px-4 py-2 border text-black dark:text-white border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="0"
-                            min={0}
-                            max={100000000}
-                        />
-                    </form>
+                    <InputLabel inputId='addInput' inputPlaceHolder='0' textLabel='Ingreso' min={0} max={100000} typeInput='number' />
                 }
             />
 
             <CustomModal
                 title='Agregar gasto'
-                idModal='addModal'
+                idModal='subtractionModal'
                 textPrimaryButton='Agregar'
                 textSecondaryButton='Cancelar'
+                ref={substractModalRef}
                 body={
-                    <form>
-                        <input type="number" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0" min={0} max={100000000} />
-                    </form>
+                    <InputLabel inputId='addInput' inputPlaceHolder='0' textLabel='Gasto' min={0} max={100000} typeInput='number' />
                 }
             />
         </div>
