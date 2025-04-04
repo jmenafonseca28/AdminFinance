@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 
-export interface InputLabelProps {
+export interface InputLabelProps extends React.HTMLProps<HTMLInputElement> {
     inputId: string;
     inputPlaceHolder: string;
     textLabel: string;
