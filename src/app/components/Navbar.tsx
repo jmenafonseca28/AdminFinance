@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getLoggedUserName, logout } from '../services/UserProfilesService';
+import DropDownButton from './DropDownButton';
 
 export default function Navbar() {
     const [userName, setUserName] = useState("");
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -12,7 +14,6 @@ export default function Navbar() {
 
     async function getUser() {
         const name = await getLoggedUserName();
-
         if (name) {
             setUserName(name);
         }
@@ -20,34 +21,37 @@ export default function Navbar() {
 
     async function logoutF() {
         const error = await logout();
-
         if (error) {
             console.error(error);
             return;
         }
-
         router.push('/pages/login');
     }
 
     return (
-        <>
-            {/* Navbar */}
-            <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4">
-                <div className="container">
-                    <span className="navbar-brand fw-bold">FinanzZZ</span>
-                    <ul className="navbar-nav">
-                        <li className="nav-item dropdown">
-                            <button className="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                {userName}
-                            </button>
-                            <ul className="dropdown-menu dropdown-menu-dark">
-                                <li><button className="dropdown-item">Perfil</button></li>
-                                <li><button className="dropdown-item" onClick={logoutF}>Cerrar sesión</button></li>
-                            </ul>
-                        </li>
-                    </ul>
+        <nav className="bg-white dark:bg-gray-800 shadow-md mb-4 text-gray-900 dark:text-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between h-16">
+                    <div className="flex items-center">
+                        <span className="text-2xl font-bold text-gray-800 dark:text-white">FinanzZZ</span>
+                    </div>
+                    <DropDownButton text={userName} body={<>
+                        <button
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-600"
+                            onClick={() => { }}>
+                            Perfil
+                        </button>
+                        <button
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-600"
+                            onClick={() => {
+                                logoutF();
+                            }}>
+                            Cerrar sesión
+                        </button>
+                    </>} />
+
                 </div>
-            </nav>
-        </>
+            </div>
+        </nav>
     )
 }
