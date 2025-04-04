@@ -1,8 +1,20 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: "Nunito";
+    src: url("./assets/fonts/Nunito/Nunito-VariableFont_wght.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 @plugin "@midudev/tailwind-animations";
 
-@theme {}
+@theme {
+
+    --font-nunito: "Nunito", sans-serif;
+
+}
 
 @utility animate-bounce-50 {
     animation: bounce 1s infinite;
