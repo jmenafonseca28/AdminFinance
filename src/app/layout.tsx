@@ -12,7 +12,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Finanzas</title>
       </head>
-      <body >
+      <body className="font-nunito">
         {children}
       </body>
     </html>
