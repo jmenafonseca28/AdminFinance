@@ -32,6 +32,12 @@ export default function Modal({
     }, [onClickSecondaryButton]);
 
     function handleClickPrimaryButton() {
+
+        if (!dialogRef.current) return;
+
+        dialogRef.current.classList.remove('animate-fade-in');
+        dialogRef.current.classList.add('animate-fade-out');
+
         onClickPrimaryButton?.();
         setTimeout(() => {
             dialogRef.current?.close();
