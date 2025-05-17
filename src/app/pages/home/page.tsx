@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PlusCircle, MinusCircle, Wallet, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import MonthReport from '@/app/models/MonthReport.model';
-import { getMovementsForLoggedUser } from '@/app/services/MovementService';
+import { addMovementForUser, getMovementsForLoggedUser } from '@/app/services/MovementService';
 import Movements from '@/app/models/Movements.model';
 import { Months } from '@/app/constants/Months.types';
 import { getBalanceForLoggedUser } from '@/app/services/UserProfilesService';
@@ -12,6 +12,7 @@ import { parseDate } from '@/app/scripts/DateParser';
 import Navbar from '@/app/components/Navbar';
 import CustomModal from '@/app/components/CustomModal';
 import InputLabel from '@/app/components/InputLabel';
+import toast, { Toaster } from 'react-hot-toast';
 
 const DashboardPage = () => {
     // State variables
@@ -24,6 +25,8 @@ const DashboardPage = () => {
     // Refs
     const addModalRef = useRef<HTMLDialogElement>(null);
     const substractModalRef = useRef<HTMLDialogElement>(null);
+    const addInputRef = useRef<HTMLInputElement>(null);
+    const subtractInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         setIsMounted(true);
@@ -83,6 +86,40 @@ const DashboardPage = () => {
         if (monthNowData) {
             setMonthEntrance(monthNowData.Ingresos);
             setMonthBill(monthNowData.Gastos);
+        }
+    }
+
+    async function handleAddMovement() {
+        const value = addInputRef.current?.value;
+        if (value) {
+            await toast.promise(
+                addMovementForUser(TypeMovements.ENTRANCE, parseFloat(value), new Date()),
+                {
+                    loading: 'Agregando ingreso...',
+                    success: <b>Ingreso agregado!</b>,
+                    error: <b>No se pudo agregar el ingreso</b>,
+                },
+            );
+            addInputRef.current!.value = '';
+            addModalRef.current?.close();
+            modifyData();
+        }
+    }
+
+    async function handleSubtractMovement() {
+        const value = subtractInputRef.current?.value;
+        if (value) {
+            await toast.promise(
+                addMovementForUser(TypeMovements.BILL, parseFloat(value), new Date()),
+                {
+                    loading: 'Agregando gasto...',
+                    success: <b>Gasto agregado!</b>,
+                    error: <b>No se pudo agregar el gasto</b>,
+                },
+            );
+            subtractInputRef.current!.value = '';
+            substractModalRef.current?.close();
+            modifyData();
         }
     }
 
@@ -175,8 +212,9 @@ const DashboardPage = () => {
                 textSecondaryButton='Cancelar'
                 ref={addModalRef}
                 body={
-                    <InputLabel inputId='addInput' inputPlaceHolder='0' textLabel='Ingreso' min={0} max={100000} typeInput='number' />
+                    <InputLabel inputId='addInput' ref={addInputRef} inputPlaceHolder='0' textLabel='Ingreso' min={0} max={100000} typeInput='number' />
                 }
+                onClickPrimaryButton={handleAddMovement}
             />
 
             <CustomModal
@@ -186,9 +224,11 @@ const DashboardPage = () => {
                 textSecondaryButton='Cancelar'
                 ref={substractModalRef}
                 body={
-                    <InputLabel inputId='addInput' inputPlaceHolder='0' textLabel='Gasto' min={0} max={100000} typeInput='number' />
+                    <InputLabel inputId='addInput' ref={subtractInputRef} inputPlaceHolder='0' textLabel='Gasto' min={0} max={100000} typeInput='number' />
                 }
+                onClickPrimaryButton={handleSubtractMovement}
             />
+            <Toaster />
         </div>
     );
 };
