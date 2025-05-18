@@ -5,7 +5,6 @@ import DropDownButton from './DropDownButton';
 
 export default function Navbar() {
     const [userName, setUserName] = useState("");
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -28,6 +27,10 @@ export default function Navbar() {
         router.push('/pages/login');
     }
 
+    function goToProfile() {
+        router.push('/pages/profile');
+    }
+
     return (
         <nav className="bg-white dark:bg-gray-800 shadow-md mb-4 text-gray-900 dark:text-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,14 +41,12 @@ export default function Navbar() {
                     <DropDownButton text={userName} body={<>
                         <button
                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-600"
-                            onClick={() => { }}>
+                            onClick={goToProfile}>
                             Perfil
                         </button>
                         <button
                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-600"
-                            onClick={() => {
-                                logoutF();
-                            }}>
+                            onClick={logoutF}>
                             Cerrar sesión
                         </button>
                     </>} />
