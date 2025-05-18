@@ -4,7 +4,7 @@ export default interface ModalProps {
     textPrimaryButton: string,
     idModal: string,
     ref: React.RefObject<HTMLDialogElement | null>,
-    onClickPrimaryButton?: () => undefined,
+    onClickPrimaryButton?: Function
     textSecondaryButton?: string,
-    onClickSecondaryButton?: () => undefined
+    onClickSecondaryButton?: Function
 }

@@ -1,4 +1,5 @@
 import { supabase } from "./ClientServiceSupabase";
+import { TypeMovements } from "../constants/TypeMovements.types";
 
 async function getMovementsForLoggedUser() {
     const id = await supabase.auth.getUser().then((response) => {
@@ -22,4 +23,40 @@ async function getMovementsForLoggedUser() {
     return data;
 }
 
-export { getMovementsForLoggedUser };
+async function addMovementForUser( typeMovent: TypeMovements, quantity: number, date: Date) {
+    const id = await supabase.auth.getUser().then((response) => {
+        return response.data.user?.id;
+    }).catch((error) => {
+        return null;
+    });
+
+    if (!id) {
+        return;
+    }
+
+    const { data: typeData, error: typeError } = await supabase
+        .from("TypeMovement")
+        .select("id")
+        .eq("type", typeMovent)
+        .single(); 
+
+    if (typeError || !typeData) {
+        return typeError;
+    }
+
+    const { data, error } = await supabase.from("Movements").insert([{
+        iduser: id,
+        date: date.toISOString().split('T')[0],
+        quantity: quantity,
+        idtype: typeData.id
+    }]).select();
+
+    if (error) {
+        return error;
+    }
+
+    return data;
+    
+}
+
+export { getMovementsForLoggedUser, addMovementForUser };
