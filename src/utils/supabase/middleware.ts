@@ -21,7 +21,7 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
     }
 
-    if (user && (pathname === Routes.LOGIN || pathname === '/')) {
+    if (user && (pathname === Routes.LOGIN || pathname === '/' || pathname === Routes.REGISTER)) {
         return NextResponse.redirect(new URL(Routes.HOME, request.url));
     }
 
