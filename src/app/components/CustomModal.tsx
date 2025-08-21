@@ -32,10 +32,16 @@ export default function Modal({
     }, [onClickSecondaryButton]);
 
     function handleClickPrimaryButton() {
+
+        if (!dialogRef.current) return;
+
+        dialogRef.current.classList.remove('animate-fade-in');
+        dialogRef.current.classList.add('animate-fade-out');
+
         onClickPrimaryButton?.();
         setTimeout(() => {
             dialogRef.current?.close();
-        }, 100);
+        }, 200);
     }
 
     function handleClickSecondaryButton() {
@@ -48,7 +54,7 @@ export default function Modal({
         onClickSecondaryButton?.();
         setTimeout(() => {
             dialogRef.current?.close();
-        }, 100);
+        }, 200);
     }
 
     return (
@@ -56,7 +62,7 @@ export default function Modal({
             ref={dialogRef}
             id={idModal}
             className="border-0 outline-none backdrop:bg-black/50 backdrop:backdrop-blur-sm p-0 shadow-xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-95  rounded-lg bg-gray-800 animate-fade-in"
-            style={{ animationDuration: '0.1s' }}
+            style={{ animationDuration: '0.2s' }}
         >
             <div className="w-full max-w-md">
                 <div className="bg-white dark:bg-gray-800">

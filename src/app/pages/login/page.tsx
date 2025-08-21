@@ -4,6 +4,10 @@ import React, { useState } from 'react';
 import InputLabel from '../../components/InputLabel';
 import UserLogin from '@/app/models/UserLogin.model';
 import { login } from '@/app/services/AuthService';
+import Loader from '@/app/components/Loader';
+import { LoaderEvent } from '@/app/custom/LoaderEvent';
+import toast, { Toaster } from 'react-hot-toast';
+import { AuthError } from '@supabase/supabase-js';
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -12,20 +16,30 @@ export default function Login() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const loaderEvent = LoaderEvent('loginLoader');
+        document.dispatchEvent(loaderEvent);
+        const loaderEventQuit = LoaderEvent('loginLoader', true);
+
         const user: UserLogin = {
             email,
             password
         };
 
         try {
-            const response = await login(user);
-            if (response) {
-                router.push('/pages/home');
-            } else {
-                console.error('Error al iniciar sesión');
-            }
-        } catch (error) {
-            console.error(error);
+            await toast.promise(
+                login(user),
+                {
+                    loading: 'Iniciando sesión...',
+                    success: <b>Éxitoso!</b>,
+                    error: <b>No se pudo iniciar sesión</b>,
+                },   
+            );
+            document.dispatchEvent(loaderEventQuit);
+            router.push('/pages/home');
+        } catch (error: AuthError | any) {
+            document.dispatchEvent(loaderEventQuit);
+            toast.error(error.message ?? 'Hubo un error al iniciar sesión, pruebe más tarde');
         }
     };
 
@@ -58,8 +72,19 @@ export default function Login() {
                             Entrar
                         </button>
                     </form>
+                    <p className="text-center mt-4">
+                        ¿No tienes una cuenta?{' '}
+                        <a
+                            href="/pages/register"
+                            className="text-blue-500 hover:underline"
+                        >
+                            Regístrate aquí
+                        </a>
+                    </p>
                 </div>
             </div>
+            <Loader showId='loginLoader' text='Iniciando sesión' />
+            <Toaster />
         </div>
     );
 }

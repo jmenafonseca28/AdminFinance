@@ -5,11 +5,8 @@ export async function login(user: UserLogin) {
     const { email, password } = user;
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-        console.error('Error al iniciar sesión:', error.message);
-        return null;
-    }
-
+    if (error) throw error;
+     
     return data;
 }
 
@@ -20,4 +17,13 @@ export async function logout() {
         console.error("Error", error.message);
         return;
     }
+}
+
+export async function register(user: UserLogin) {
+    const { email, password } = user;
+    const { data, error } = await supabase.auth.signUp({ email, password });
+
+    if (error) throw error;
+
+    return data;
 }
