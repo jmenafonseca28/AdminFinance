@@ -29,5 +29,8 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
     }
 
-    return supabaseResponse;
+    //si ingresa una ruta que no existe lo envia a la pagina 404
+    if (!Object.values(Routes).includes(pathname)) {
+        return NextResponse.redirect(new URL(Routes.NOT_FOUND, request.url));
+    }
 }
