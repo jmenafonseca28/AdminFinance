@@ -18,3 +18,12 @@ export async function logout() {
         return;
     }
 }
+
+export async function register(user: UserLogin) {
+    const { email, password } = user;
+    const { data, error } = await supabase.auth.signUp({ email, password });
+
+    if (error) throw error;
+
+    return data;
+}

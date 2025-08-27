@@ -72,6 +72,15 @@ export default function Login() {
                             Entrar
                         </button>
                     </form>
+                    <p className="text-center mt-4">
+                        ¿No tienes una cuenta?{' '}
+                        <a
+                            href="/pages/register"
+                            className="text-blue-500 hover:underline"
+                        >
+                            Regístrate aquí
+                        </a>
+                    </p>
                 </div>
             </div>
             <Loader showId='loginLoader' text='Iniciando sesión' />
