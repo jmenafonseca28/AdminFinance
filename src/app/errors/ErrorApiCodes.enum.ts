@@ -10,5 +10,6 @@ export enum ErrorApiCodes {
     user_already_exists = "El usuario ya existe",
     user_banned = "Usuario baneado",
     weak_password = "Contraseña débil",
-    phone_exists = "El teléfono ya existe"
+    phone_exists = "El teléfono ya existe",
+
 }
