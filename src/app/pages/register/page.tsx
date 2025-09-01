@@ -9,10 +9,12 @@ import Loader from "@/app/components/Loader";
 import { LoaderEvent } from "@/app/custom/LoaderEvent";
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
-import { AuthApiError, AuthError, isAuthApiError } from "@supabase/supabase-js";
+import { AuthError, isAuthApiError } from "@supabase/supabase-js";
+
 
 export default function Register() {
   const [name, setName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -37,6 +39,7 @@ export default function Register() {
 
     const user = {
       name,
+      lastName,
       email,
       password,
     }
@@ -47,6 +50,7 @@ export default function Register() {
         success: <b>¡Cuenta creada exitosamente!</b>,
         error: <b>No se pudo crear la cuenta</b>,
       })
+      
       document.dispatchEvent(loaderEventQuit)
       router.push("/pages/login")
     } catch (error: AuthError | any) {
@@ -66,10 +70,17 @@ export default function Register() {
           <form onSubmit={handleSubmit}>
             <InputLabel
               inputId="name"
-              inputPlaceHolder="Nombre completo"
-              textLabel="Nombre completo"
+              inputPlaceHolder="Nombre "
+              textLabel="Nombre "
               typeInput="text"
               onchange={(e) => setName(e.target.value)}
+            />
+            <InputLabel
+              inputId="lastName"
+              inputPlaceHolder="Apellido"
+              textLabel="Apellido"
+              typeInput="text"
+              onchange={(e) => setLastName(e.target.value)}
             />
             <InputLabel
               inputId="email"

@@ -15,22 +15,17 @@ async function getBalanceForLoggedUser() {
     const { data, error } = await supabase.from("userprofiles").select("balance").eq("id", id).single();
 
     if (error) {
-        console.error("Error", error);
-        if (error.code === 'PGRST116') {// MODIFICAR A CONSTANTES
-            await createNewUserProfile(id);
-            return getBalanceForLoggedUser();
-        }
+
         return error;
     }
 
     return data;
 }
 
-async function createNewUserProfile(id: string) {
-    const { data, error } = await supabase.from("userprofiles").insert([{ id, balance: 0 }]);
+async function createNewUserProfile(id: string, name: string, lastName: string) {
+    const { data, error } = await supabase.from("userprofiles").insert([{ id, name, lastName, balance: 0 }]);
 
     if (error) {
-        console.error("Error al crear", error);
         return error;
     }
     return data;
@@ -51,12 +46,12 @@ async function getLoggedUser() {
     const { data, error: AuthError } = await supabase.auth.getSession();
 
     if (AuthError) {
-        console.error("Error", AuthError);
         return null;
     }
 
     return data.session;
 }
+
 
 async function getLoggedUserName() {
     const data = await getLoggedUser();
@@ -91,4 +86,4 @@ async function logout() {
 }
 
 
-export { getBalanceForLoggedUser, getUser, getLoggedUser, getLoggedUserName, logout };
+export { getBalanceForLoggedUser, getUser, getLoggedUser, getLoggedUserName, logout, createNewUserProfile };
