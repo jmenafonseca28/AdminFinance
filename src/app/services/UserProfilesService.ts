@@ -15,11 +15,7 @@ async function getBalanceForLoggedUser() {
     const { data, error } = await supabase.from("userprofiles").select("balance").eq("id", id).single();
 
     if (error) {
-        console.error("Error", error);
-        if (error.code === 'PGRST116') {// MODIFICAR A CONSTANTES
-            await createNewUserProfile(id, "", "");
-            return getBalanceForLoggedUser();
-        }
+
         return error;
     }
 
@@ -30,7 +26,6 @@ async function createNewUserProfile(id: string, name: string, lastName: string) 
     const { data, error } = await supabase.from("userprofiles").insert([{ id, name, lastName, balance: 0 }]);
 
     if (error) {
-        console.error("Error al crear", error);
         return error;
     }
     return data;
@@ -51,7 +46,6 @@ async function getLoggedUser() {
     const { data, error: AuthError } = await supabase.auth.getSession();
 
     if (AuthError) {
-        console.error("Error", AuthError);
         return null;
     }
 
@@ -59,7 +53,6 @@ async function getLoggedUser() {
 }
 
 
-// 
 async function getLoggedUserName() {
     const data = await getLoggedUser();
     if (!data) {

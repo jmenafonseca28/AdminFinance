@@ -32,7 +32,6 @@ export async function register(user: UserRegister) {
             .eq("id", data.user.id);
     }
     if (error) throw error;
-    console.log("User registered:", data);
     return data;
 }
 
