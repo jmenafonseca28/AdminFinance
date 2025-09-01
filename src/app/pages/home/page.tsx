@@ -45,6 +45,17 @@ const DashboardPage = () => {
         }
     }
 
+    // validar que el numero no sea negativo o no valido
+    function validNumberForMovement(value: string): boolean {
+
+        const number = parseFloat(value.trim());
+        if (isNaN(number) || number <= 0 || number >= 100000000) {
+            toast.error("El número no es válido");
+            return false;
+        }
+        return true;
+    }
+
     async function createData(): Promise<MonthReport[]> {
         const movements = await getMovementsForLoggedUser() as Movements[] | undefined;
         if (!movements || 'code' in movements) {
@@ -90,37 +101,49 @@ const DashboardPage = () => {
     }
 
     async function handleAddMovement() {
+
         const value = addInputRef.current?.value;
-        if (value) {
-            await toast.promise(
-                addMovementForUser(TypeMovements.ENTRANCE, parseFloat(value), new Date()),
-                {
-                    loading: 'Agregando ingreso...',
-                    success: <b>Ingreso agregado!</b>,
-                    error: <b>No se pudo agregar el ingreso</b>,
-                },
-            );
+
+        // Validar antes de proceder
+        if (!value || !(validNumberForMovement(value))) {
+            // Limpiar campos
             addInputRef.current!.value = '';
-            addModalRef.current?.close();
-            modifyData();
-        }
+
+            return;
+        };
+
+        await toast.promise(
+            addMovementForUser(TypeMovements.ENTRANCE, parseFloat(value), new Date()),
+            {
+                loading: 'Agregando ingreso...',
+                success: <b>Ingreso agregado!</b>,
+                error: <b>No se pudo agregar el ingreso</b>,
+            },
+        );
+        // Limpiar campos
+        addInputRef.current!.value = '';
+        addModalRef.current?.close();
+        modifyData();
+
     }
 
     async function handleSubtractMovement() {
         const value = subtractInputRef.current?.value;
-        if (value) {
-            await toast.promise(
-                addMovementForUser(TypeMovements.BILL, parseFloat(value), new Date()),
-                {
-                    loading: 'Agregando gasto...',
-                    success: <b>Gasto agregado!</b>,
-                    error: <b>No se pudo agregar el gasto</b>,
-                },
-            );
-            subtractInputRef.current!.value = '';
-            substractModalRef.current?.close();
-            modifyData();
-        }
+        // valida el numero 
+        if (!value || !(validNumberForMovement(value))) return;
+
+        await toast.promise(
+            addMovementForUser(TypeMovements.BILL, parseFloat(value), new Date()),
+            {
+                loading: 'Agregando gasto...',
+                success: <b>Gasto agregado!</b>,
+                error: <b>No se pudo agregar el gasto</b>,
+            },
+        );
+        subtractInputRef.current!.value = '';
+        substractModalRef.current?.close();
+        modifyData();
+
     }
 
     return (
@@ -166,7 +189,7 @@ const DashboardPage = () => {
                 {/* Gráfico */}
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
                     <h5 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Resumen Financiero</h5>
-                    <div className="h-[400px]">
+                    <div className="h-[400px]" >
                         {isMounted && (
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart
