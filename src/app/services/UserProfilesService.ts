@@ -17,7 +17,7 @@ async function getBalanceForLoggedUser() {
     if (error) {
         console.error("Error", error);
         if (error.code === 'PGRST116') {// MODIFICAR A CONSTANTES
-            await createNewUserProfile(id);
+            await createNewUserProfile(id, "", "");
             return getBalanceForLoggedUser();
         }
         return error;
@@ -26,8 +26,8 @@ async function getBalanceForLoggedUser() {
     return data;
 }
 
-async function createNewUserProfile(id: string) {
-    const { data, error } = await supabase.from("userprofiles").insert([{ id, balance: 0 }]);
+async function createNewUserProfile(id: string, name: string, lastName: string) {
+    const { data, error } = await supabase.from("userprofiles").insert([{ id, name, lastName, balance: 0 }]);
 
     if (error) {
         console.error("Error al crear", error);
@@ -58,6 +58,8 @@ async function getLoggedUser() {
     return data.session;
 }
 
+
+// 
 async function getLoggedUserName() {
     const data = await getLoggedUser();
     if (!data) {
@@ -91,4 +93,4 @@ async function logout() {
 }
 
 
-export { getBalanceForLoggedUser, getUser, getLoggedUser, getLoggedUserName, logout };
+export { getBalanceForLoggedUser, getUser, getLoggedUser, getLoggedUserName, logout, createNewUserProfile };
