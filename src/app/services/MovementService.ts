@@ -1,11 +1,12 @@
 import { supabase } from "./ClientServiceSupabase";
 import { TypeMovements } from "../constants/TypeMovements.types";
+import { log } from "@/app/custom/EventLog";
 
 async function getMovementsForLoggedUser() {
     const id = await supabase.auth.getUser().then((response) => {
         return response.data.user?.id;
-    }).catch((error) => {
-        console.error("Error", error);
+    }).catch(async (error) => {
+        await log("Error al obtener el usuario", error);
         return null;
     });
 
@@ -15,15 +16,16 @@ async function getMovementsForLoggedUser() {
 
     const { data, error } = await supabase.from("Movements").select("id, date, quantity, TypeMovement(type)").eq("iduser", id).gte("date", new Date(new Date().setMonth(new Date().getMonth() - 4)).toISOString());
 
+    console.log(data, error, " Movements");
     if (error) {
-        console.error("Error", error);
+        await log("Error al obtener movimientos", error);
         return error;
     }
 
     return data;
 }
 
-async function addMovementForUser( typeMovent: TypeMovements, quantity: number, date: Date) {
+async function addMovementForUser(typeMovent: TypeMovements, quantity: number, date: Date) {
     const id = await supabase.auth.getUser().then((response) => {
         return response.data.user?.id;
     }).catch((error) => {
@@ -38,7 +40,7 @@ async function addMovementForUser( typeMovent: TypeMovements, quantity: number, 
         .from("TypeMovement")
         .select("id")
         .eq("type", typeMovent)
-        .single(); 
+        .single();
 
     if (typeError || !typeData) {
         return typeError;
@@ -52,11 +54,12 @@ async function addMovementForUser( typeMovent: TypeMovements, quantity: number, 
     }]).select();
 
     if (error) {
+        await log("Error insertando movimiento", error);
         return error;
     }
 
     return data;
-    
+
 }
 
 export { getMovementsForLoggedUser, addMovementForUser };
