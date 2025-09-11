@@ -58,6 +58,7 @@ const DashboardPage = () => {
 
     async function createData(): Promise<MonthReport[]> {
         const movements = await getMovementsForLoggedUser() as Movements[] | undefined;
+       
         if (!movements || 'code' in movements) {
             return [];
         }
