@@ -4,12 +4,13 @@ import User from '../models/User.model';
 import UserRegister from '../models/UserRegister.model';
 import { createNewUserProfile } from "./UserProfilesService";
 import { log } from "@/app/custom/EventLog";
+
 export async function login(user: UserLogin) {
     const { email, password } = user;
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-        log("Errorr al iniciar sesión", error);
+        await log("Error al iniciar sesión", error);
         throw error;
     }
 
