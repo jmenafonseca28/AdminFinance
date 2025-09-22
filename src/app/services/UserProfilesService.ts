@@ -16,7 +16,7 @@ async function getBalanceForLoggedUser() {
     const { data, error } = await supabase.from("userprofiles").select("balance").eq("id", id).single();
 
     if (error) {
-       await log("Error al obtener el balance del usuario", error);
+        await log("Error al obtener el balance del usuario", error);
         return error;
     }
 
@@ -27,7 +27,7 @@ async function createNewUserProfile(id: string, name: string, lastName: string) 
     const { data, error } = await supabase.from("userprofiles").insert([{ id, name, lastName, balance: 0 }]);
 
     if (error) {
-       await log("Error al crear el perfil de usuario", error);
+        await log("Error al crear el perfil de usuario", error);
         return error;
     }
     return data;
@@ -48,7 +48,7 @@ async function getLoggedUser() {
     const { data, error: AuthError } = await supabase.auth.getSession();
 
     if (AuthError) {
-       await  log("Error al obtener la sesión", AuthError);
+        await log("Error al obtener la sesión", AuthError);
         return null;
     }
 
