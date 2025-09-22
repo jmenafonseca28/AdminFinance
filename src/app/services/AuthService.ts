@@ -2,7 +2,6 @@ import { supabase } from './ClientServiceSupabase';
 import UserLogin from '@/app/models/UserLogin.model';
 import User from '../models/User.model';
 import UserRegister from '../models/UserRegister.model';
-import { createNewUserProfile } from "./UserProfilesService";
 import { log } from "@/app/custom/EventLog";
 
 export async function login(user: UserLogin) {
@@ -26,17 +25,22 @@ export async function logout() {
     }
 }
 
-export async function register(user: UserRegister) {
-    const { email, password, name, lastName } = user;
-    const { data, error } = await supabase.auth.signUp({ email, password });
 
-    if (data.user) {
-        await supabase.from("userprofiles")
-            .update({ name, lastName })
-            .eq("id", data.user.id);
-    }
+export async function register(user: UserRegister) {
+
+    const { email, password, name, lastName } = user;
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            data: {
+                name,
+                lastName
+            }
+        }
+    });
     if (error) {
-        log("Error al registrar usuario", error);
+        await log("Error al registrar usuario", error);
         throw error;
     }
     return data;
