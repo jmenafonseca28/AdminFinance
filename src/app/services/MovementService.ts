@@ -49,7 +49,7 @@ async function addMovementForUser(typeMovent: TypeMovements, quantity: number, d
     const { data, error } = await supabase.from("Movements").insert([{
         iduser: id,
         date: date.toISOString().split('T')[0],
-        quantity: quantity,
+        quantity: quantity < 0 ? quantity * -1 : quantity,
         idtype: typeData.id
     }]).select();
 
