@@ -5,6 +5,7 @@ import { getBalanceForLoggedUser, getLoggedUserName, getUser, recoverPassword } 
 import { User, Mail, Wallet, ArrowLeft } from 'lucide-react'
 import { Lock } from 'lucide-react'
 import Navbar from '@/app/components/Navbar'
+
 export default function Profile() {
     const router = useRouter()
     const [fullName, setFullName] = useState("");
@@ -13,6 +14,8 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
     const [showPasswordDialog, setShowPasswordDialog] = useState(false)
     const [isRecovering, setIsRecovering] = useState(false)
+
+
     function backToHome() {
         router.push('/pages/home');
     };
@@ -32,6 +35,7 @@ export default function Profile() {
             setShowPasswordDialog(false)
         }
     }
+    
     useEffect(() => {
         async function loadProfileData() {
             try {

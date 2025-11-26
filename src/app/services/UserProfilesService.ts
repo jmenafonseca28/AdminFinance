@@ -1,6 +1,7 @@
 import { supabase } from "./ClientServiceSupabase";
 import { log } from "@/app/custom/EventLog";
-
+import { Routes } from "@/app/constants/Routes";
+import { createClient } from "@/utils/supabase/client";
 async function getBalanceForLoggedUser() {
     try {
         // Obtener el usuario autenticado
@@ -104,25 +105,27 @@ async function logout() {
 }
 
 async function updatePassword(newPassword: string) {
-    const { error } = await supabase.auth.updateUser({ 
-        password: newPassword 
+    const supabase = createClient();
+
+    const { data, error } = await supabase.auth.updateUser({
+        password: newPassword
     });
 
-    if (error) {
-        await log("Error al actualizar la contraseña", error);
-        return error;
-    }
+    if (error) throw error;
+    return data;
 }
 
 async function recoverPassword(email: string) {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `http://localhost:3000/pages/resetPass`,
     });
 
     if (error) {
-        await log("Error al enviar el correo de recuperación de contraseña", error);
+        await log("Error al enviar el correo de recuperación", error);
         return error;
     }
+
     return data;
 }
+
 export { getBalanceForLoggedUser, getUser, getLoggedUser, getLoggedUserName, logout, createNewUserProfile, updatePassword, recoverPassword };
