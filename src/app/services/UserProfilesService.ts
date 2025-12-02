@@ -116,15 +116,20 @@ async function updatePassword(newPassword: string) {
 }
 
 async function recoverPassword(email: string) {
+    const redirectURL = process.env.NEXT_PUBLIC_SUPABASE_REDIRECT_URL;
+
+    if (!redirectURL) {
+        throw new Error("URL no definida ");
+    }
+
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `http://localhost:3000/pages/resetPass`,
+        redirectTo: redirectURL
     });
 
     if (error) {
-        await log("Error al enviar el correo de recuperación", error);
-        return error;
+        await log("Error al enviar correo de recuperación de contraseña", error);
+        throw error;
     }
-
     return data;
 }
 
