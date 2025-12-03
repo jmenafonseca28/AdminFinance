@@ -1,19 +1,24 @@
 import { supabase } from './ClientServiceSupabase';
 import UserLogin from '@/app/models/UserLogin.model';
-import User from '../models/User.model';
+
 import UserRegister from '../models/UserRegister.model';
 import { log } from "@/app/custom/EventLog";
 
-export async function login(user: UserLogin) {
-    const { email, password } = user;
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+export async function login({ email, password }: UserLogin) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+    });
 
     if (error) {
-        await log("Error al iniciar sesión", error);
+
+        if (error.message.includes("Email not confirmed")) {
+            throw new Error("El correo no ha sido confirmado. Por favor verifica tu bandeja de entrada.");
+        }
         throw error;
     }
 
-    return data;
+    return data.user;
 }
 
 export async function logout() {

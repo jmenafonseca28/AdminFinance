@@ -8,11 +8,11 @@ import Loader from '@/app/components/Loader';
 import { LoaderEvent } from '@/app/custom/LoaderEvent';
 import toast, { Toaster } from 'react-hot-toast';
 import { AuthError } from '@supabase/supabase-js';
-
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,8 +33,9 @@ export default function Login() {
                     loading: 'Iniciando sesión...',
                     success: <b>Éxitoso!</b>,
                     error: <b>No se pudo iniciar sesión</b>,
-                },   
+                },
             );
+
             document.dispatchEvent(loaderEventQuit);
             router.push('/pages/home');
         } catch (error: AuthError | any) {

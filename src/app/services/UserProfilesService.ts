@@ -1,27 +1,43 @@
 import { supabase } from "./ClientServiceSupabase";
 import { log } from "@/app/custom/EventLog";
-
+import { Routes } from "@/app/constants/Routes";
+import { createClient } from "@/utils/supabase/client";
 async function getBalanceForLoggedUser() {
-    const id = await supabase.auth.getUser().then((response) => {
-        return response.data.user?.id;
-    }).catch((error) => {
-        log("Error", error);
+    try {
+        // Obtener el usuario autenticado
+        const { data: authData, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !authData?.user?.id) {
+            if (authError) {
+                await log("Error obteniendo usuario", new Error(authError.message));
+            }
+            return null;
+        }
+
+
+        const userId = authData.user.id;
+
+        // Obtener balance
+        const { data, error } = await supabase
+            .from("userprofiles")
+            .select("balance")
+            .eq("id", userId)
+            .single();
+
+        if (error) {
+            await log("Error obteniendo balance del usuario", error);
+            return null;
+        }
+
+        return data;
+    } catch (err) {
+        // Captura cualquier otro error inesperado
+        console.error("Unexpected error", err);
         return null;
-    });
-
-    if (!id) {
-        return;
     }
-
-    const { data, error } = await supabase.from("userprofiles").select("balance").eq("id", id).single();
-
-    if (error) {
-        await log("Error al obtener el balance del usuario", error);
-        return error;
-    }
-
-    return data;
 }
+
+
 
 async function createNewUserProfile(id: string, name: string, lastName: string) {
     const { data, error } = await supabase.from("userprofiles").insert([{ id, name, lastName, balance: 0 }]);
@@ -88,5 +104,33 @@ async function logout() {
 
 }
 
+async function updatePassword(newPassword: string) {
+    const supabase = createClient();
 
-export { getBalanceForLoggedUser, getUser, getLoggedUser, getLoggedUserName, logout, createNewUserProfile };
+    const { data, error } = await supabase.auth.updateUser({
+        password: newPassword
+    });
+
+    if (error) throw error;
+    return data;
+}
+
+async function recoverPassword(email: string) {
+    const redirectURL = process.env.NEXT_PUBLIC_SUPABASE_REDIRECT_URL;
+
+    if (!redirectURL) {
+        throw new Error("URL no definida ");
+    }
+
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: redirectURL
+    });
+
+    if (error) {
+        await log("Error al enviar correo de recuperación de contraseña", error);
+        throw error;
+    }
+    return data;
+}
+
+export { getBalanceForLoggedUser, getUser, getLoggedUser, getLoggedUserName, logout, createNewUserProfile, updatePassword, recoverPassword };
