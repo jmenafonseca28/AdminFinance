@@ -14,9 +14,12 @@ async function getMovementsForLoggedUser() {
         return;
     }
 
-    const { data, error } = await supabase.from("Movements").select("id, date, quantity, TypeMovement(type)").eq("iduser", id).gte("date", new Date(new Date().setMonth(new Date().getMonth() - 4)).toISOString());
+    const { data, error } = await supabase.from("Movements")
+        .select("id, date, quantity, TypeMovement(type)")
+        .eq("iduser", id)
+        .order("date", { ascending: false })   
+        .limit(10);                           
 
-    console.log(data, error, " Movements");
     if (error) {
         await log("Error al obtener movimientos", error);
         return error;
@@ -24,6 +27,7 @@ async function getMovementsForLoggedUser() {
 
     return data;
 }
+
 
 async function addMovementForUser(typeMovent: TypeMovements, quantity: number, date: Date) {
     const id = await supabase.auth.getUser().then((response) => {
@@ -61,5 +65,4 @@ async function addMovementForUser(typeMovent: TypeMovements, quantity: number, d
     return data;
 
 }
-
 export { getMovementsForLoggedUser, addMovementForUser };
