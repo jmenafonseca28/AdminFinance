@@ -2,7 +2,7 @@ import { supabase } from "./ClientServiceSupabase";
 import { TypeMovements } from "../constants/TypeMovements.types";
 import { log } from "@/app/custom/EventLog";
 
-async function getLast10MovementsForUser() {
+async function getLastMovementsForUser() {
     const id = await supabase.auth.getUser().then((response) => {
         return response.data.user?.id;
     }).catch(async (error) => {
@@ -87,4 +87,4 @@ async function addMovementForUser(typeMovent: TypeMovements, quantity: number, d
     return data;
 
 }
-export { getLast10MovementsForUser, addMovementForUser, getMovementsForLoggedUser };
+export { getLastMovementsForUser, addMovementForUser, getMovementsForLoggedUser };

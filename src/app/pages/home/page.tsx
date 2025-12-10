@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PlusCircle, MinusCircle, Wallet, ArrowUpRight, ArrowDownRight, TrendingUp, TrendingDown } from 'lucide-react';
 import MonthReport from '@/app/models/MonthReport.model';
-import { addMovementForUser, getLast10MovementsForUser } from '@/app/services/MovementService';
+import { addMovementForUser, getLastMovementsForUser } from '@/app/services/MovementService';
 import Movements from '@/app/models/Movements.model';
 import { Months } from '@/app/constants/Months.types';
 import { getBalanceForLoggedUser } from '@/app/services/UserProfilesService';
@@ -41,7 +41,7 @@ const DashboardPage = () => {
     setData(await createData());
     await getBalance();
 
-    const movementsData = await getLast10MovementsForUser();
+    const movementsData = await getLastMovementsForUser();
     if (movementsData && !("code" in movementsData)) {
       const mapped = movementsData.map((m: any) => ({
         id: m.id,
@@ -70,7 +70,7 @@ const DashboardPage = () => {
   }
 
   async function createData(): Promise<MonthReport[]> {
-    const movements = await getLast10MovementsForUser() as Movements[] | undefined;
+    const movements = await getLastMovementsForUser() as Movements[] | undefined;
     if (!movements || "code" in movements) return [];
 
     const data: MonthReport[] = [];
