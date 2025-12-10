@@ -2,7 +2,7 @@ import { supabase } from "./ClientServiceSupabase";
 import { TypeMovements } from "../constants/TypeMovements.types";
 import { log } from "@/app/custom/EventLog";
 
-async function getMovementsForLoggedUser() {
+async function getLast10MovementsForUser() {
     const id = await supabase.auth.getUser().then((response) => {
         return response.data.user?.id;
     }).catch(async (error) => {
@@ -17,8 +17,8 @@ async function getMovementsForLoggedUser() {
     const { data, error } = await supabase.from("Movements")
         .select("id, date, quantity, TypeMovement(type)")
         .eq("iduser", id)
-        .order("date", { ascending: false })   
-        .limit(10);                           
+        .order("date", { ascending: false })
+        .limit(5);
 
     if (error) {
         await log("Error al obtener movimientos", error);
@@ -28,11 +28,33 @@ async function getMovementsForLoggedUser() {
     return data;
 }
 
+async function getMovementsForLoggedUser() {
+    const id = await supabase.auth.getUser().then((response) => {
+        return response.data.user?.id;
+    }).catch(async (error) => {
+        await log("Error al obtener el usuario", error);
+        return null;
+    }
+    );
+    if (!id) {
+        return;
+    }
+    const { data, error } = await supabase.from("Movements")
+        .select("id, date, quantity, TypeMovement(type)")
+        .eq("iduser", id)
+        .order("date", { ascending: false });
+    if (error) {
+        await log("Error al obtener movimientos", error);
+        return error;
+    }
+    return data;
+}
 
 async function addMovementForUser(typeMovent: TypeMovements, quantity: number, date: Date) {
     const id = await supabase.auth.getUser().then((response) => {
         return response.data.user?.id;
-    }).catch((error) => {
+    }).catch(async (error) => {
+        await log("Error al obtener el usuario", error);
         return null;
     });
 
@@ -65,4 +87,4 @@ async function addMovementForUser(typeMovent: TypeMovements, quantity: number, d
     return data;
 
 }
-export { getMovementsForLoggedUser, addMovementForUser };
+export { getLast10MovementsForUser, addMovementForUser, getMovementsForLoggedUser };
