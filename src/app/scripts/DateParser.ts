@@ -1,6 +1,6 @@
-//Format: yyyy-MM-DD
 function formatDateString(dateString: string): string {
-    const [year, month, day] = dateString.split("-");
+    const cleanDate = dateString.split("T")[0]; // elimina la hora si viene en formato UTC
+    const [year, month, day] = cleanDate.split("-");
     return `${day}/${month}/${year}`;
 }
 

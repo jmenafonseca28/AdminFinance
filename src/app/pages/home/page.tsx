@@ -76,8 +76,9 @@ const DashboardPage = () => {
     const data: MonthReport[] = [];
 
     movements.forEach(movement => {
-      const date = formatDateString(movement.date);
-      const month = Months[new Date(date).getMonth()];
+      const monthIndex = new Date(movement.date).getMonth();
+      const month = Months[monthIndex];
+
       const report = data.find(item => item.month === month);
 
       if (report) {
@@ -95,9 +96,12 @@ const DashboardPage = () => {
       }
     });
 
+
+    data.sort((a, b) => Months.indexOf(a.month as any) - Months.indexOf(b.month as any));
     calculateEntranceBill(data);
     return data;
   }
+
 
   function calculateEntranceBill(data: MonthReport[]) {
     const monthNow = new Date().getMonth();
@@ -109,7 +113,7 @@ const DashboardPage = () => {
     }
   }
 
- 
+
 
   async function handleAddMovement() {
     const value = addInputRef.current?.value;
