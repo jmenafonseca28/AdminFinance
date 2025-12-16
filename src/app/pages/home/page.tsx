@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PlusCircle, MinusCircle, Wallet, ArrowUpRight, ArrowDownRight, TrendingUp, TrendingDown } from 'lucide-react';
 import MonthReport from '@/app/models/MonthReport.model';
-import { addMovementForUser, getLast10MovementsForUser } from '@/app/services/MovementService';
+import { addMovementForUser, getLastMovementsForUser } from '@/app/services/MovementService';
 import Movements from '@/app/models/Movements.model';
 import { Months } from '@/app/constants/Months.types';
 import { getBalanceForLoggedUser } from '@/app/services/UserProfilesService';
@@ -41,7 +41,7 @@ const DashboardPage = () => {
     setData(await createData());
     await getBalance();
 
-    const movementsData = await getLast10MovementsForUser();
+    const movementsData = await getLastMovementsForUser();
     if (movementsData && !("code" in movementsData)) {
       const mapped = movementsData.map((m: any) => ({
         id: m.id,
@@ -70,14 +70,15 @@ const DashboardPage = () => {
   }
 
   async function createData(): Promise<MonthReport[]> {
-    const movements = await getLast10MovementsForUser() as Movements[] | undefined;
+    const movements = await getLastMovementsForUser() as Movements[] | undefined;
     if (!movements || "code" in movements) return [];
 
     const data: MonthReport[] = [];
 
     movements.forEach(movement => {
-      const date = formatDateString(movement.date);
-      const month = Months[new Date(date).getMonth()];
+      const monthIndex = new Date(movement.date).getMonth();
+      const month = Months[monthIndex];
+
       const report = data.find(item => item.month === month);
 
       if (report) {
@@ -95,9 +96,12 @@ const DashboardPage = () => {
       }
     });
 
+
+    data.sort((a, b) => Months.indexOf(a.month as any) - Months.indexOf(b.month as any));
     calculateEntranceBill(data);
     return data;
   }
+
 
   function calculateEntranceBill(data: MonthReport[]) {
     const monthNow = new Date().getMonth();
@@ -109,7 +113,7 @@ const DashboardPage = () => {
     }
   }
 
- 
+
 
   async function handleAddMovement() {
     const value = addInputRef.current?.value;
