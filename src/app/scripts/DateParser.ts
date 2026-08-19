@@ -1,7 +1,8 @@
-//Format: yyyy-MM-DD
-function parseDate(date: string): Date {
-    const dateParts = date.split('-');
-    return new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]));
+function formatDateString(dateString: string): string {
+    const cleanDate = dateString.split("T")[0]; // elimina la hora si viene en formato UTC
+    const [year, month, day] = cleanDate.split("-");
+    return `${day}/${month}/${year}`;
 }
 
-export {parseDate};
+
+export {formatDateString};

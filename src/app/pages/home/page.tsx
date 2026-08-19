@@ -3,17 +3,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PlusCircle, MinusCircle, Wallet, ArrowUpRight, ArrowDownRight, TrendingUp, TrendingDown } from 'lucide-react';
 import MonthReport from '@/app/models/MonthReport.model';
-import { addMovementForUser, getMovementsForLoggedUser } from '@/app/services/MovementService';
+import { addMovementForUser, getLastMovementsForUser } from '@/app/services/MovementService';
 import Movements from '@/app/models/Movements.model';
 import { Months } from '@/app/constants/Months.types';
 import { getBalanceForLoggedUser } from '@/app/services/UserProfilesService';
 import { TypeMovements } from '@/app/constants/TypeMovements.types';
-import { parseDate } from '@/app/scripts/DateParser';
+import { formatDateString } from '@/app/scripts/DateParser';
 import Navbar from '@/app/components/Navbar';
 import CustomModal from '@/app/components/CustomModal';
 import InputLabel from '@/app/components/InputLabel';
 import toast, { Toaster } from 'react-hot-toast';
-import { MovementRow } from '@/app/models/MovementRow.model';
+
 
 
 const DashboardPage = () => {
@@ -24,7 +24,7 @@ const DashboardPage = () => {
   const [monthBill, setMonthBill] = useState(0);
 
   // Últimos movimientos
-  const [movements, setMovements] = useState<MovementRow[]>([]);
+  const [movements, setMovements] = useState<Movements[]>([]);
 
   // Refs modales
   const addModalRef = useRef<HTMLDialogElement>(null);
@@ -41,7 +41,7 @@ const DashboardPage = () => {
     setData(await createData());
     await getBalance();
 
-    const movementsData = await getMovementsForLoggedUser();
+    const movementsData = await getLastMovementsForUser();
     if (movementsData && !("code" in movementsData)) {
       const mapped = movementsData.map((m: any) => ({
         id: m.id,
@@ -70,14 +70,15 @@ const DashboardPage = () => {
   }
 
   async function createData(): Promise<MonthReport[]> {
-    const movements = await getMovementsForLoggedUser() as Movements[] | undefined;
+    const movements = await getLastMovementsForUser() as Movements[] | undefined;
     if (!movements || "code" in movements) return [];
 
     const data: MonthReport[] = [];
 
     movements.forEach(movement => {
-      const date = parseDate(movement.date);
-      const month = Months[date.getMonth()];
+      const monthIndex = new Date(movement.date).getMonth();
+      const month = Months[monthIndex];
+
       const report = data.find(item => item.month === month);
 
       if (report) {
@@ -95,9 +96,12 @@ const DashboardPage = () => {
       }
     });
 
+
+    data.sort((a, b) => Months.indexOf(a.month as any) - Months.indexOf(b.month as any));
     calculateEntranceBill(data);
     return data;
   }
+
 
   function calculateEntranceBill(data: MonthReport[]) {
     const monthNow = new Date().getMonth();
@@ -109,14 +113,7 @@ const DashboardPage = () => {
     }
   }
 
-  function formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  }
+
 
   async function handleAddMovement() {
     const value = addInputRef.current?.value;
@@ -250,7 +247,7 @@ const DashboardPage = () => {
                 {movements.length > 0 ? (
                   movements.map(movement => (
                     <tr key={movement.id} className="border-b hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                      <td className="py-3 px-4">{formatDate(movement.date)}</td>
+                      <td className="py-3 px-4">{formatDateString(movement.date)}</td>
 
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
